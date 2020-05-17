@@ -91,3 +91,62 @@ Tutorial recordatorio para iniciar una API con Rails, Devise y Token_auth, UUID 
    `rails db:create`
     
     
+5. Inicializar el modelo del usuario para devise
+
+    `rails generate devise_token_auth:install User auth`
+    
+    Una vez creada la migración, editar el archivo **db/migrate/[timestamp]_devise_token_auth_create_users.rb**
+    modificando la plantilla inicial del usuario creada por devise para asignar UUID como generador del id en la
+    cabecera de creación de la tabla.
+    
+    ```ruby
+    create_table :users, id: :uuid do |t|
+    ```
+    
+    Configurar el modelo del usuario para que sea extendido por devise, editando el archivo **app/models/user.rb**
+    
+    ```ruby
+    class User < ActiveRecord::Base
+     extend Devise::Models
+    
+     devise :database_authenticatable,
+            :registerable,
+            :recoverable,
+            :rememberable,
+            :trackable,
+            :validatable
+    
+     include DeviseTokenAuth::Concerns::User
+    end
+    ```
+
+    Debido a que queremos que el usuario que ingresa sea rastreable y además viene por defecto con el modelo de usuario
+    de Devise es necesario generar la migración para extender el modelo y agregar las columnas faltantes, sino es muy
+    probable que al momento de loguearse e rails explote.
+    
+    `rails g migration add_devise_trackable_columns_to_user`
+    
+    Editar el archivo de migración agregando las columnas para el rastreo.
+    
+    ```ruby
+    class AddDeviseTrackableColumnsToUser < ActiveRecord::Migration[6.0]
+      def change
+        add_column :users, :sign_in_count, :integer, default: 0, null: false
+        add_column :users, :current_sign_in_at, :datetime
+        add_column :users, :last_sign_in_at, :datetime
+        add_column :users, :current_sign_in_ip, :string
+        add_column :users, :last_sign_in_ip, :string
+      end
+    end
+    ```
+   
+    Ejecutar la migración
+    
+    `rails db:migrate`
+   
+   
+    
+    
+    
+    
+    
