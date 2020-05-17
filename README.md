@@ -143,10 +143,20 @@ Tutorial recordatorio para iniciar una API con Rails, Devise y Token_auth, UUID 
     Ejecutar la migración
     
     `rails db:migrate`
+
    
-   
+6. Poblar la base de datos con un usuario para probar su correcta inicialización
+
+    Editar el archivo **db/seeds.rb** agregando el o los usuarios que se desee.
     
+    ```ruby
+    User.create(email: 'user@example.com', nickname: 'UOne', name: 'User One', password: "theone")
+    ```
     
+    Ejecutar la inserción de la semilla.
     
+    `rails db:seed`
     
+    En este caso para revisar el correcto poblado de la base de datos utilizamos [pgadmin](https://www.pgadmin.org)
     
+    ![pgadmin](doc/images/pgadmin.png)
