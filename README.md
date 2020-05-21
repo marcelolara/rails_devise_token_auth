@@ -160,3 +160,57 @@ Tutorial recordatorio para iniciar una API con Rails, Devise y Token_auth, UUID 
     En este caso para revisar el correcto poblado de la base de datos utilizamos [pgadmin](https://www.pgadmin.org)
     
     ![pgadmin](doc/images/pgadmin.png)
+    
+
+6. Iniciar el servidor de rails para probar los servicios.
+
+    `rails s`
+    
+    Como ya se ha poblado la base de datos con un usuario es posible hacer sign_in y sign_out como llama devise
+    por defecto al login y logout, además devise_token_auth los agrupa en la ruta auth quedando la llamada de la
+    siguiente forma.
+
+    #### Sign_in 
+    Se levanta la sesión ingresando el **email** y **constraseña**. 
+    
+    ```shell script
+   ## sign_in
+   curl -X "POST" "http://localhost:3000/auth/sign_in" \
+        -H 'Content-Type: application/json; charset=utf-8' \
+        -d $'{
+     "email": "user@example.com",
+     "password": "theone"
+   }'
+    ```
+   ![sign_in](doc/images/sign_in.png)
+   
+   #### Sign_out
+   Para cerrar la sesión es necesario copiar **uid**, **access-token** y **client** desde la cabecera del método sign_in
+   y agregarlo a la cabecera del método sign_out.
+   
+   ```shell script
+   ## sign_out
+   curl -X "DELETE" "http://localhost:3000/auth/sign_out" \
+        -H 'access-token: aEN85L2-nOhEuL4hoirRSw' \
+        -H 'uid: user@example.com' \
+        -H 'client: lVaFHqd5b7mtuVr4O6gm0A' \
+        -H 'Content-Type: application/json; charset=utf-8' \
+        -d $'{}'
+   ```
+   ![sign_out](doc/images/sign_out.png)
+   
+   #### Sign_up
+   Es posible registrar un nuevo usuario utilizando un **email** y **contraseña** con el siguiente método.
+   
+   ```shell script
+   ## sign_up
+   curl -X "POST" "http://localhost:3000/auth" \
+        -H 'Content-Type: application/json; charset=utf-8' \
+        -d $'{
+     "email": "usertwo@example.com",
+     "password": "thetwo"
+   }'
+   ```
+   ![sign_up](doc/images/sign_up.png)
+   
+   
